@@ -2,8 +2,9 @@
 
 # -------------------------------------
 # Helper script for samloader on Termux
-# Github:	lekron42
-# Version:	v1.03
+# Github:	itssct
+# Version:	v1.04
+# Credits: githubuser lekron42
 # -------------------------------------
 
 show_usage() {
@@ -12,6 +13,7 @@ show_usage() {
 	echo "Arguments:"
 	echo " -f|--force  : Force update even if no new version is found"
 	echo " -r|--repair : Update samloader to fix download failure"
+	echo " -p|--path   : Path to save the decrypted Firmware"
 	echo " -h|--help   : Show this help"
 	exit 0
 }
@@ -19,7 +21,7 @@ show_usage() {
 update_samloader() {
 	{ proceed=$(pip3 uninstall samloader | tee /dev/fd/5); } 5>&1
 	if [ $(echo "$proceed" | grep -c "Successfully") -gt 0 ]; then
-		pip3 install git+https://github.com/nlscc/samloader.git
+		pip3 install git+https://github.com/martinetd/samloader.git
 		echo "Successfully reinstalled samloader."
 	else
 		echo "Uninstalling cancelled.."
@@ -43,6 +45,9 @@ if [ $# -eq 1 ]; then
 		-r|--repair)
 			update_samloader
 			;;
+		-p|--path)
+		 shift
+			r_dest=$1
 		*)
 			echo "Incorrect input!" 1>&2
 			show_usage
@@ -104,7 +109,7 @@ if [ $(pip3 list 2> /dev/null | grep -c "samloader") -eq 0 ]; then
 		y|Y) ;;
 		*) exit 0;;
 	esac
-	pip3 install git+https://github.com/nlscc/samloader.git
+	pip3 install git+https://github.com/martinetd/samloader.git
 fi
 
 model="$(getprop 'ro.product.model')"
